@@ -19,8 +19,10 @@ namespace TestePratico.Application.Services
 
         public async Task Inserir(UsuarioViewModel usuarioViewModel)
         {
-            var usuario = _mapper.Map<Usuario>(usuarioViewModel);
-            await _usuarioRepository.Inserir(usuario);
+            var usuarioCriptografado = _mapper.Map<Usuario>(usuarioViewModel);
+            usuarioCriptografado.CriptografarSenha();
+
+            await _usuarioRepository.Inserir(usuarioCriptografado);
         }
 
         public async Task Atualizar(UsuarioViewModel usuarioViewModel)
@@ -43,7 +45,10 @@ namespace TestePratico.Application.Services
 
         public async Task<UsuarioViewModel> Login(UsuarioViewModel usuarioViewModel)
         {
-            var usuario = await _usuarioRepository.Login(_mapper.Map<Usuario>(usuarioViewModel));
+            var usuarioCriptografado = _mapper.Map<Usuario>(usuarioViewModel);
+            usuarioCriptografado.CriptografarSenha();
+
+            var usuario = await _usuarioRepository.Login(usuarioCriptografado);
 
             if (usuario is null)
             {

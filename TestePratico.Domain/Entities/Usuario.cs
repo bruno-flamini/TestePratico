@@ -1,4 +1,6 @@
-﻿using TestePratico.Domain.Utils;
+﻿using System.Security.Cryptography;
+using System.Text;
+using TestePratico.Domain.Utils;
 using TestePratico.Domain.Validations;
 
 namespace TestePratico.Domain.Entities
@@ -42,5 +44,23 @@ namespace TestePratico.Domain.Entities
         public DateTime DataCadastro { get; private set; }
         public bool Ativo { get; private set; }
         public string Funcao { get; private set; }
+
+        public void CriptografarSenha()
+        {
+            var hash = SHA1.Create();
+            var encoding = new ASCIIEncoding();
+            var array = encoding.GetBytes(Senha);
+
+            array = hash.ComputeHash(array);
+
+            var valorCodificado = new StringBuilder();
+
+            foreach (var item in array)
+            {
+                valorCodificado.Append(item.ToString("@1!%#"));
+            }
+
+            Senha = valorCodificado.ToString();
+        }
     }
 }
